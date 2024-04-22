@@ -1,0 +1,26 @@
+---
+title: "Regression residuals as indicators of contamination"
+author: "Andrew Rate"
+date: "`r Sys.Date()`"
+output: 
+  bookdown::html_document2: 
+    toc_depth: 2
+    fig_caption: yes
+    number_sections: no
+    self_contained: no
+  html_document: 
+    toc_depth: 2
+    fig_caption: yes
+    number_sections: no
+    self_contained: no
+---
+
+## Introduction
+
+
+
+## References
+
+
+
+<p>&nbsp;</p>
