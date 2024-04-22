@@ -1,0 +1,37 @@
+---
+title: "counting samples with R"
+author: "Andrew Rate"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Summary statistics tables which include sample counts above environmental thresholds
+
+```{r setup, include=FALSE, echo=-1}
+knitr::opts_chunk$set(echo = TRUE)
+library(RcmdrMisc)
+library(flextable)
+  set_flextable_defaults(font.family = "Arial", font.size = 11, 
+                       theme_fun = "theme_booktabs", padding = 1)
+library(officer)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
