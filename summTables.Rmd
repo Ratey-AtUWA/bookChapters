@@ -2,7 +2,17 @@
 title: "Counting samples with R"
 author: "Andrew Rate"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  bookdown::html_document2: 
+    toc_depth: 2
+    fig_caption: yes
+    number_sections: no
+    self_contained: no
+  html_document: 
+    toc_depth: 2
+    fig_caption: yes
+    number_sections: no
+    self_contained: no
 ---
 
 ## Summary statistics tables which include sample counts above environmental thresholds
