@@ -64,9 +64,9 @@ frames. This will be useful later on as we can include the row names in indices
 to interrogate the data frame for the correct environmental threshold.
 
 ```{r}
-ISQG <- read.csv("ISQG.csv")
+ISQG <- read.csv("https://github.com/Ratey-AtUWA/bookChapters/raw/main/ISQG.csv")
 row.names(ISQG) <- ISQG$Tox
-HIL <- read.csv("HIL_NEPM.csv")
+HIL <- read.csv("https://github.com/Ratey-AtUWA/bookChapters/raw/main/HIL_NEPM.csv")
 row.names(HIL) <- HIL$Tox
 ```
 
@@ -104,7 +104,8 @@ classes at The University of Western Australia (see Rate and McGrath, 2022 for
 an earlier version).
 
 ```{r}
-sedsoil <- read.csv("afs1923abridged.csv", stringsAsFactors = TRUE)
+git <- "https://github.com/Ratey-AtUWA/bookChapters/raw/main/"
+sedsoil <- read.csv(paste0(git,"afs1923abridged.csv"), stringsAsFactors = TRUE)
 # convert Year to a factor, and SampID to character
 sedsoil$Year <- factor(sedsoil$Year)
 sedsoil$SampID <- as.character(sedsoil$SampID)
