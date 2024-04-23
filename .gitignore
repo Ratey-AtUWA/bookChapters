@@ -4,3 +4,4 @@
 .Ruserdata
 bookChapters.Rproj
 *.html
+/summTables_files/*
