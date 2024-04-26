@@ -5,3 +5,6 @@
 bookChapters.Rproj
 *.html
 /summTables_files/*
+/old/*
+/mapData_TO-DO_files/*
+/mapData_files/*
