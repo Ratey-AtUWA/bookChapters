@@ -43,7 +43,7 @@ The intention is to provide options, relatively simply, to plot informative
 maps, which include data of types typically collected in environmental
 assessments.collected in this class. We don't cover vector-based maps, 
 [importing GIS shapefiles](https://ratey-atuwa.github.io/cybloRg/Shapefiles-in-R-maps.html){target="_blank"}, 
-[interpolation of point data](https://ratey-atuwa.github.io/cybloRg/geostats.html){target="_blank"},[choropleth maps](https://en.wikipedia.org/wiki/Choropleth_map){target="_blank"}, 
+[choropleth maps](https://en.wikipedia.org/wiki/Choropleth_map){target="_blank"}, 
 and many other map plotting methods.
 
 This guide shows some of the more common and/or easy ways to make maps in **R**
@@ -698,7 +698,7 @@ system *via* the `sf` package.
 
 <p>&nbsp;</p>
 
-<center>![](./images/RubberDucks.png)<br>
+<center>![](https://github.com/Ratey-AtUWA/bookChapters/blob/main/images/RubberDucks.png)<br>
 [read about it](https://www.iflscience.com/28000-rubber-ducks-accidentally-embarked-on-an-epic-ocean-current-study-in-1992-58342){target="_blank"}</center>
 
 <p>&nbsp;</p>
@@ -784,8 +784,5 @@ Pebesma, E., & Bivand, R. (2023). *Spatial Data Science: With Applications in R*
 Chapman and Hall/CRC.
 [https://doi.org/10.1201/9780429459016](https://doi.org/10.1201/9780429459016){target="_blank"}
 (package **sf**)
-
-
-
 
 <p>&nbsp;</p>

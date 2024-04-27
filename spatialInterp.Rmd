@@ -95,6 +95,7 @@ flextable(pklist,cwidth=c(1.2,4.5,2.5)) |>
   border_outer(border=BorderDk, part = "all") |>
   font(j=1,fontname="Courier New" ,part="body") |>
   set_caption(caption="R packages used for spatial data analysis and visualisation.")
+git <- "https://raw.githubusercontent.com/Ratey-AtUWA/"
 ```
 
 <p>&nbsp;</p>
@@ -118,8 +119,8 @@ library(viridis)
 LongLat <- st_crs(4326) # uses Earth ellipsis specs from WGS84 datum
 UTM50S <- st_crs(32750) # just for Zone 50, S hemisphere!
 # import the data
-ngsaWA <- read.csv(file="ngsaWA.csv", stringsAsFactors = TRUE)
-NGSAWA_border <- read.csv("NGSAWA_border.csv")
+ngsaWA <- read.csv(paste0(git,"bookChapters/main/ngsaWA.csv"), stringsAsFactors = TRUE)
+NGSAWA_border <- read.csv(paste0(git, "bookChapters/main/NGSAWA_border.csv"))
 # make spatial data objects
 ngsaWAsf <- st_as_sf(x = ngsaWA, coords = c("LONGITUDE","LATITUDE"),
                      crs = LongLat)
@@ -191,7 +192,7 @@ semivariance is 95% of the sill. It is related to the model range *a* by:
 
 ```{r variogram-params, echo=FALSE, fig.height=5.3, fig.width=7.2, out.width="75%", fig.align='center', fig.cap="Some of the key concepts of variogram analysis (see text for definitions).", results='hold'}
 par(mar=c(0,0,0,0))
-fig0 <- readPNG("./images/Variogram_pars.png")
+fig0 <- readPNG("https://github.com/Ratey-AtUWA/bookChapters/blob/main/images/Variogram_pars.png")
 par(mar = c(0,0,0,0))
 plot(0:1,0:1, bty="n",ann=F,axes=F,type="n")
 addImg(fig0, x = 0.5, y = 0.5, width = 1)
@@ -504,7 +505,7 @@ Webster, R., Oliver, M.A., 1993. How large a sample is needed to estimate the re
 
 ```{r Hg-4-plots, echo=FALSE, fig.height=8, fig.width=8, fig.align='center', fig.cap="Geostatistics for Hg (mercury) in the WA subset of the NGSA data: (a) spatial autocorrelation, (b) experimental (binned) and model variograms, (c) kriging predictions, and (d) kriging uncertainties.", results='hold'}
 par(mar=c(0,0,0,0))
-fig0 <- readPNG("./images/combined_NGSA_WA_Hg.png")
+fig0 <- readPNG("https://github.com/Ratey-AtUWA/bookChapters/blob/main/images/combined_NGSA_WA_Hg.png")
 par(mar = c(0,0,0,0))
 plot(0:1,0:1, bty="n",ann=F,axes=F,type="n")
 addImg(fig0, x = 0.5, y = 0.5, width = 1)

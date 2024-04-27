@@ -73,6 +73,8 @@ set_flextable_defaults(theme_fun = "theme_zebra",
                        font.size = 10, fonts_ignore = TRUE)
 BorderDk <- officer::fp_border(color = "#B5C3DF", style = "solid", width = 1)
 BorderLt <- officer::fp_border(color = "#FFFFFF", style = "solid", width = 1)
+
+git <- "https://raw.githubusercontent.com/Ratey-AtUWA/"
 ```
 
 ```{r tabulate-packages, echo=FALSE}
@@ -124,8 +126,9 @@ UTM50S <- st_crs(32750) # just for Zone 50, S hemisphere!
 
 # import the data
 
-ngsaWA <- read.csv(file="ngsaWA.csv", stringsAsFactors = TRUE)
-NGSAWA_border <- read.csv("NGSAWA_border.csv")
+ngsaWA <- read.csv(file=paste0(git,"bookChapters/main/ngsaWA.csv"), 
+                   stringsAsFactors = TRUE)
+NGSAWA_border <- read.csv(paste0(git,"bookChapters/main/NGSAWA_border.csv"))
 
 # make spatial data objects
 
@@ -515,6 +518,10 @@ legend("bottomright", bty="n", inset = 0.01,
 box()
 ```
 
+```{r tidy-up-lmi, include=FALSE}
+rm(list=c("mI", "ngsaWA_nbwt","lmi_signif")) # tidy up
+```
+
 <p>&nbsp;</p>
 
 The LISA map enables us to identify localized map regions where values of the
@@ -522,10 +529,6 @@ chosen variable in or data are strongly positively or negatively associated with
 one another, that is, different spatial clusters. Usually locations having
 significant Low-High or High-Low association are isolated and less common, as we
 see in Figure \@ref(fig:map-lisa).
-
-```{r tidy-up-lmi, include=FALSE}
-rm(list=c("mI", "ngsaWA_nbwt","lmi_signif")) # tidy up
-```
 
 ## What's next?
 
