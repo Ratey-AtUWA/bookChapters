@@ -1,0 +1,178 @@
+---
+title: "Spatial statistics in R"
+author: "Andrew Rate"
+date: "`r Sys.Date()`"
+output: 
+  bookdown::html_document2: 
+    toc_depth: 2
+    fig_caption: yes
+    number_sections: no
+    self_contained: no
+  html_document: 
+    toc_depth: 2
+    fig_caption: yes
+    number_sections: no
+    self_contained: no
+---
+
+In this Chapter we use a range of R packages for different functions, shown in
+Table 1.
+
+```{r load-packages+environment-invisibly, message=FALSE, warning=FALSE, echo=FALSE, include=FALSE}
+library(sp)
+library(lctools)
+library(spdep)
+library(gstat)
+library(sf)
+library(maps)
+library(maptiles)
+library(prettymapr)
+library(fields)
+library(viridis)
+library(flextable)
+
+set_flextable_defaults(theme_fun = "theme_zebra", 
+                       font.size = 10, fonts_ignore = TRUE)
+BorderDk <- officer::fp_border(color = "#B5C3DF", style = "solid", width = 1)
+BorderLt <- officer::fp_border(color = "#FFFFFF", style = "solid", width = 1)
+```
+
+```{r tabulate-packages, echo=FALSE}
+pklist <- 
+  data.frame(Package=c("sf","gstat","sp","maps","spdep","lctools","maptiles",
+                               "prettymapr","fields","viridis"),
+        Purpose=c("Spatial data handling, formatting, and storing spatial data",
+                   "Geostatistics (variograms and variogram models, kriging)",
+      "Handling, formatting, and storing spatial data; some graphical functions",
+      "Simple map outlines","Spatial autocorrelation, LISA",
+      "Spatial autocorrelation",
+      "Retrieving and plotting tile-based map data",
+      "Map annotations",
+      "Visualizing spatial data with irregular grids",
+      "Colourblind-friendly colour palettes for maps"),
+      Reference=c("Pebesma (2018)", "Pebesma (2004)", 
+                  "Pebesma and Bivand (2005)","Becker et al. (2021)",
+                  "Pebesma and Bivand (2023)", "Kalogirou (2020)",
+                  "Giraud (2021)", "Dunnington (2022)",
+                  "Nychka et al. (2021)", "Garnier et al. (2021)"))
+flextable(pklist,cwidth=c(1.2,4.5,2.5)) |> 
+  border_outer(border=BorderDk, part = "all") |>
+  font(j=1,fontname="Courier New" ,part="body") |>
+  set_caption(caption="Table 1: R packages used for spatial data analysis and visualisation.")
+```
+
+<p>&nbsp;</p>
+
+```{r load-packages-but-dont-run, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE}
+library(sf)
+library(spdep)
+library(gstat)
+library(lctools)
+library(sp)
+library(maps)
+library(maptiles)
+library(prettymapr)
+library(fields)
+library(viridis)
+```
+
+## Introduction
+
+This Chapter will make simple maps with added data (see
+[mapData.html](mapData.html) if you haven't already), and help you to
+understand and analyse **spatial autocorrelation** using **R**.
+
+We will use a subset of the National Geochemical Survey of Australia (NGSA) data
+documented by [Caritat and Cooper
+(2011)](https://www.ga.gov.au/about/projects/resources/national-geochemical-survey){target="_blank"} to illustrate the various concepts and procedures involved. We supply data in `.csv` files for importing into **R**.
+
+## Making a base map
+
+```{r make-basemap, warning=FALSE, error=FALSE, results='hold'}
+
+# define coordinate reference systems
+
+LongLat <- st_crs(4326) # uses Earth ellipsis specs from WGS84 datum
+UTM50S <- st_crs(32750) # just for Zone 50, S hemisphere!
+
+# import the data
+
+ngsaWA <- read.csv(file="ngsaWA.csv", stringsAsFactors = TRUE)
+NGSAWA_border <- read.csv("NGSAWA_border.csv")
+
+# make spatial data objects
+
+ngsaWAsf <- st_as_sf(x = ngsaWA, coords = c("LONGITUDE","LATITUDE"),
+g                     crs = LongLat)
+ngsaWAbord_sf <- st_as_sf(NGSAWA_border, coords = c("Long.est","Lat.est"),
+                          crs = LongLat)
+
+# define map extent
+
+WA_extent <- st_as_sf(data.frame(Longitude = c(108, 129),
+                                 Latitude = c(-38, -13)),
+                      coords=c("Longitude","Latitude"), crs=LongLat) 
+
+```
+
+## Getting and plotting the map tile data
+
+We now need some functions from the `maptiles` package (Giraud 2021).
+
+```{r base-WA-map, fig.height=7.6, fig.width=6, fig.align='center', fig.cap="Figure 1: Map of Western Australia (rectangular Long-Lat projection) used subsequently as the base map for spatial analyses. Generated using the `maptiles` R package, with OpenTopoMap tiles.", out.width="55%", warning=FALSE, message=FALSE, results='hide'}
+WAtiles <- get_tiles(WA_extent, provider = "OpenTopoMap", 
+                     crop = TRUE, zoom = 5) # make map object
+
+par(oma=c(0,0,0,0), mar=c(3,3,0.5,0.5), mgp=c(1.4,0.3,0), 
+    lend=2, ljoin=1, tcl=0.3)
+plot_tiles(WAtiles, axes=TRUE, mar=c(3,3,0.5,0.5))
+mtext(side=1, line=1.6, text="Longitude (\u00B0 E)",
+      font=2, cex=1.2)
+mtext(side=2, line=1.6, text="Latitude (\u00B0 S)",
+      font=2, cex=1.2)
+```
+
+<p>&nbsp;</p>
+
+### Simple line-based base map
+
+We can also make a very simple base map at country scales using the `maps`
+package (Figure 2). The code makes use of the native **R** pipe operator `|>` to
+sequence R functions without nesting. Map objects made using the `sf` package
+also work well with `ggplot2`.
+
+```{r simple-wa-map0, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+wa_sf <- map(regions = "Australia", plot=F) |> 
+  st_as_sf(coords = c("x","y"), crs = LongLat) |> 
+  st_crop(xmin=108,ymin=-38,xmax=129,ymax=-13)
+library(ggplot2)
+ggplot() +
+  geom_sf(data=wa_sf) +
+  labs(y="Latitude (\u00B0S)", x = "Longitude (\u00B0E)") + 
+  theme_bw()
+```
+
+```{r simple-wa-map, fig.height=5.7, fig.width=4.5, fig.align='center', fig.cap="Figure 2: Map of Western Australia (rectangular Long-Lat projection) as a simple alternative base map for spatial analyses. Generated using the `maps`, `sf`, and `ggplot2` R packages.", out.width="40%", warning=FALSE, message=FALSE, results='hold', echo=FALSE}
+wa_sf <- map(regions = "Australia", plot=F) |> 
+  st_as_sf(coords = c("x","y"), crs = LongLat) |> 
+  st_crop(xmin=108,ymin=-38,xmax=129,ymax=-13)
+library(ggplot2)
+xlabs = seq(115,125, 5)
+ylabs = seq(-35, -15, 5)
+ggplot() +
+  geom_sf(data=wa_sf) +
+  labs(y="Latitude (\u00B0S)", x = "Longitude (\u00B0E)") + 
+  scale_x_continuous(breaks = xlabs, labels = paste0(xlabs,'°E')) +
+  scale_y_continuous(breaks = ylabs, labels = paste0(ylabs,'°S')) +
+  theme_bw()
+```
+
+<p>&nbsp;</p>
+
+
+
+## References
+
+
+
+<p>&nbsp;</p>
